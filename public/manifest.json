@@ -1,0 +1,16 @@
+{
+  "name": "PaperBoy Distributor",
+  "short_name": "PaperBoy",
+  "description": "Newspaper Distributor Management System",
+  "start_url": "/paper-boy/public/login",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
