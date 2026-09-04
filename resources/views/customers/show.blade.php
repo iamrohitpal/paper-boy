@@ -7,7 +7,7 @@
             <div class="mb-4 sm:mb-0">
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Customer Ledger
                 </h1>
-                <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Billing and payment history for
+                <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">{{ __('messages.billing_and_payment_history_for') }}
                     {{ $customer->name }}
                 </p>
             </div>
@@ -15,17 +15,17 @@
             <!-- Right: Actions -->
             <div class="flex items-center space-x-4">
                 <button @click="openPaymentModal()"
-                    class="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-offset-gray-900 transition-colors">
+                    class="inline-flex items-center justify-center px-5 py-2.5 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-lg shadow-green-500/30 transform hover:-translate-y-0.5 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 dark:focus:ring-offset-gray-900 transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
-                    Receive Payment
+                    {{ __('messages.receive_payment') }}
                 </button>
                 <div class="relative" x-data="{ open: false }">
                     <button @click="open = !open" @click.away="open = false"
-                        class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-gray-900 transition-colors">
-                        Delivery Actions
+                        class="inline-flex items-center justify-center px-5 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md hover:bg-gray-50 dark:hover:bg-gray-700/80 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-gray-900 transition-colors">
+                        {{ __('messages.delivery_actions') }}
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
                             </path>
@@ -42,7 +42,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                Log Leave
+                                {{ __('messages.log_leave') }}
                             </button>
                             <button @click="showExtraModal = true; open = false"
                                 class="group flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 w-full text-left">
@@ -51,7 +51,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                Log Extra Paper
+                                {{ __('messages.log_extra_paper') }}
                             </button>
                         </div>
                         <div class="py-1">
@@ -60,29 +60,29 @@
                                 <svg class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
-                                Generate Bill
+                                {{ __('messages.generate_bill') }}
                             </button>
                         </div>
                     </div>
                 </div>
                 <a href="{{ route('customers.edit', $customer->id) }}"
-                    class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-gray-900 transition-colors">
-                    Edit Profile
+                    class="inline-flex items-center justify-center px-5 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md hover:bg-gray-50 dark:hover:bg-gray-700/80 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-gray-900 transition-colors">
+                    {{ __('messages.edit_profile') }}
                 </a>
             </div>
         </div>
 
         <!-- Customer Summary Card -->
         <div
-            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 mb-8 overflow-hidden">
+            class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-xl shadow-gray-200/50 dark:shadow-black/20 border border-white/40 dark:border-gray-700 mb-8 overflow-hidden">
             <div class="p-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
                     <div>
                         <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ $customer->name }}</h2>
                         <div class="mt-2 text-sm text-gray-500 dark:text-gray-400 space-y-1">
-                            <p><span class="font-medium">Mobile:</span> {{ $customer->mobile }}</p>
-                            <p><span class="font-medium">Address:</span> {{ $customer->address }}</p>
-                            <p><span class="font-medium">Status:</span>
+                            <p><span class="font-medium">{{ __('messages.mobile') }}:</span> {{ $customer->mobile }}</p>
+                            <p><span class="font-medium">{{ __('messages.address') }}:</span> {{ $customer->address }}</p>
+                            <p><span class="font-medium">{{ __('messages.status') }}:</span>
                                 <span
                                     class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $customer->status === 'Active' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' }}">
                                     {{ $customer->status }}
@@ -91,13 +91,13 @@
                         </div>
                     </div>
                     <div class="mt-4 md:mt-0 text-right">
-                        <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Total Balance Due</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">{{ __('messages.total_balance_due') }}</p>
                         <p
                             class="text-3xl font-bold {{ $totalBalance > 0 ? 'text-red-600 dark:text-red-400' : ($totalBalance < 0 ? 'text-green-600 dark:text-green-400' : 'text-gray-900 dark:text-white') }}">
                             ₹{{ number_format($totalBalance, 2) }}
                         </p>
                         @if($totalBalance < 0)
-                            <p class="text-xs text-green-600 dark:text-green-400 mt-1">Advance Payment</p>
+                            <p class="text-xs text-green-600 dark:text-green-400 mt-1">{{ __('messages.advance_payment') }}</p>
                         @endif
                     </div>
                 </div>
@@ -106,15 +106,15 @@
 
         <!-- Active Subscriptions -->
         <div
-            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 mb-8 overflow-hidden">
+            class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-xl shadow-gray-200/50 dark:shadow-black/20 border border-white/40 dark:border-gray-700 mb-8 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                <h2 class="text-lg font-bold text-gray-900 dark:text-white">Active Newspapers</h2>
+                <h2 class="text-lg font-bold text-gray-900 dark:text-white">{{ __('messages.active_newspapers') }}</h2>
                 <button @click="showSubscriptionModal = true"
-                    class="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">
+                    class="inline-flex items-center text-sm p-1.5 text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 dark:text-blue-400 dark:hover:text-blue-300 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 rounded-lg transition-colors dark:text-indigo-400 dark:hover:text-indigo-300">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
-                    Add Newspaper
+                    {{ __('messages.add_newspaper') }}
                 </button>
             </div>
             <div class="p-6">
@@ -125,9 +125,9 @@
                                 class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 flex justify-between items-center bg-gray-50 dark:bg-gray-900/50">
                                 <div>
                                     <h3 class="font-bold text-gray-900 dark:text-white">{{ $sub->newspaper->name }}</h3>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">Rate:
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ __('messages.rate') }}:
                                         ₹{{ $sub->newspaper->selling_price }} |
-                                        Qty: {{ $sub->quantity }}</p>
+                                        {{ __('messages.qty') }}: {{ $sub->quantity }}</p>
                                     <p class="text-xs text-gray-500 dark:text-gray-400">Start Date: {{ date('d-M-Y', strtotime($sub->start_date)) }}</p>
                                 </div>
                                 <div class="flex space-x-2">
@@ -142,7 +142,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                            class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
+                                            class="p-1.5 p-1.5 text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 dark:text-red-400 dark:hover:text-red-300 dark:bg-red-900/30 dark:hover:bg-red-900/50 rounded-lg transition-colors bg-red-50 hover:bg-red-100 dark:text-red-400 dark:hover:text-red-300 dark:bg-red-900/30 dark:hover:bg-red-900/50 rounded-lg transition-colors dark:text-red-400 dark:hover:text-red-300">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
@@ -161,16 +161,16 @@
             </div>
         </div>
 
-        <!-- Extra Newspapers -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 mb-8 overflow-hidden">
+        <!-- {{ __('messages.extra_newspapers') }} -->
+        <div class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-xl shadow-gray-200/50 dark:shadow-black/20 border border-white/40 dark:border-gray-700 mb-8 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                <h2 class="text-lg font-bold text-gray-900 dark:text-white">Extra Newspapers</h2>
+                <h2 class="text-lg font-bold text-gray-900 dark:text-white">{{ __('messages.extra_newspapers') }}</h2>
                 <button @click="showExtraModal = true"
-                    class="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">
+                    class="inline-flex items-center text-sm p-1.5 text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 dark:text-blue-400 dark:hover:text-blue-300 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 rounded-lg transition-colors dark:text-indigo-400 dark:hover:text-indigo-300">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
-                    Log Extra Paper
+                    {{ __('messages.log_extra_paper') }}
                 </button>
             </div>
             
@@ -179,12 +179,12 @@
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="bg-gray-50 dark:bg-gray-900/50">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Newspaper</th>
-                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Quantity</th>
-                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Price (₹)</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('messages.date') }}</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('messages.newspaper') }}</th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('messages.quantity') }}</th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('messages.price') }} (₹)</th>
                                 <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('messages.actions') }}</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -211,10 +211,10 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900 dark:text-gray-200">
                                         @if(!$extra->is_billed)
-                                            <button @click="editExtra.id = '{{ $extra->id }}'; editExtra.date = '{{ \Carbon\Carbon::parse($extra->date)->format('Y-m-d') }}'; editExtra.newspaper_id = '{{ $extra->newspaper_id }}'; editExtra.quantity = {{ $extra->quantity }}; editExtra.price = {{ $extra->price }}; showEditExtraModal = true" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-3">Edit</button>
+                                            <button @click="editExtra.id = '{{ $extra->id }}'; editExtra.date = '{{ \Carbon\Carbon::parse($extra->date)->format('Y-m-d') }}'; editExtra.newspaper_id = '{{ $extra->newspaper_id }}'; editExtra.quantity = {{ $extra->quantity }}; editExtra.price = {{ $extra->price }}; showEditExtraModal = true" class="p-1.5 text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 dark:text-blue-400 dark:hover:text-blue-300 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 rounded-lg transition-colors dark:text-indigo-400 dark:hover:text-indigo-300 mr-3">{{ __('messages.edit') }}</button>
                                             <form action="{{ route('extra-newspapers.destroy', $extra->id) }}" method="POST" class="inline" x-data @submit.prevent="$dispatch('open-confirm', { message: 'Delete this extra paper?', onConfirm: () => $el.submit() })">
                                                 @csrf @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">Delete</button>
+                                                <button type="submit" class="p-1.5 text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 dark:text-red-400 dark:hover:text-red-300 dark:bg-red-900/30 dark:hover:bg-red-900/50 rounded-lg transition-colors dark:text-red-400 dark:hover:text-red-300">{{ __('messages.delete') }}</button>
                                             </form>
                                         @endif
                                     </td>
@@ -225,21 +225,21 @@
                 </div>
             @else
                 <div class="p-6">
-                    <p class="text-gray-500 dark:text-gray-400 text-sm text-center">No extra newspapers logged for this customer.</p>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm text-center">{{ __('messages.no_extra_newspapers') }}</p>
                 </div>
             @endif
         </div>
 
         <!-- Customer Leaves -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 mb-8 overflow-hidden">
+        <div class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-xl shadow-gray-200/50 dark:shadow-black/20 border border-white/40 dark:border-gray-700 mb-8 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                <h2 class="text-lg font-bold text-gray-900 dark:text-white">Customer Leaves</h2>
+                <h2 class="text-lg font-bold text-gray-900 dark:text-white">{{ __('messages.customer_leaves') }}</h2>
                 <button @click="showLeaveModal = true"
-                    class="inline-flex items-center text-sm text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">
+                    class="inline-flex items-center text-sm p-1.5 text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 dark:text-blue-400 dark:hover:text-blue-300 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 rounded-lg transition-colors dark:text-indigo-400 dark:hover:text-indigo-300">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
-                    Log Leave
+                    {{ __('messages.log_leave') }}
                 </button>
             </div>
             
@@ -248,11 +248,11 @@
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="bg-gray-50 dark:bg-gray-900/50">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Start Date</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">End Date</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Duration</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Newspaper</th>
-                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('messages.start_date') }}</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('messages.end_date') }}</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('messages.duration') }}</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('messages.newspaper') }}</th>
+                                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{{ __('messages.actions') }}</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -276,14 +276,14 @@
                                         {{ $leave['newspaper_name'] }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900 dark:text-gray-200">
-                                        <button @click="editLeave.old_start_date = '{{ $start->format('Y-m-d') }}'; editLeave.old_end_date = '{{ $end->format('Y-m-d') }}'; editLeave.old_newspaper_id = '{{ $leave['newspaper_id'] ?? '' }}'; editLeave.start_date = '{{ $start->format('Y-m-d') }}'; editLeave.end_date = '{{ $end->format('Y-m-d') }}'; editLeave.newspaper_id = '{{ $leave['newspaper_id'] ?? '' }}'; showEditLeaveModal = true" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-3">Edit</button>
+                                        <button @click="editLeave.old_start_date = '{{ $start->format('Y-m-d') }}'; editLeave.old_end_date = '{{ $end->format('Y-m-d') }}'; editLeave.old_newspaper_id = '{{ $leave['newspaper_id'] ?? '' }}'; editLeave.start_date = '{{ $start->format('Y-m-d') }}'; editLeave.end_date = '{{ $end->format('Y-m-d') }}'; editLeave.newspaper_id = '{{ $leave['newspaper_id'] ?? '' }}'; showEditLeaveModal = true" class="p-1.5 text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 dark:text-blue-400 dark:hover:text-blue-300 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 rounded-lg transition-colors dark:text-indigo-400 dark:hover:text-indigo-300 mr-3">{{ __('messages.edit') }}</button>
                                         <form action="{{ route('customers.leaves.destroy') }}" method="POST" class="inline" x-data @submit.prevent="$dispatch('open-confirm', { message: 'Delete this leave period?', onConfirm: () => $el.submit() })">
                                             @csrf @method('DELETE')
                                             <input type="hidden" name="customer_id" value="{{ $customer->id }}">
                                             <input type="hidden" name="start_date" value="{{ $start->format('Y-m-d') }}">
                                             <input type="hidden" name="end_date" value="{{ $end->format('Y-m-d') }}">
                                             <input type="hidden" name="newspaper_id" value="{{ $leave['newspaper_id'] ?? '' }}">
-                                            <button type="submit" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">Delete</button>
+                                            <button type="submit" class="p-1.5 text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 dark:text-red-400 dark:hover:text-red-300 dark:bg-red-900/30 dark:hover:bg-red-900/50 rounded-lg transition-colors dark:text-red-400 dark:hover:text-red-300">{{ __('messages.delete') }}</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -293,16 +293,16 @@
                 </div>
             @else
                 <div class="p-6">
-                    <p class="text-gray-500 dark:text-gray-400 text-sm text-center">No leaves recorded for this customer.</p>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm text-center">{{ __('messages.no_leaves_recorded') }}</p>
                 </div>
             @endif
         </div>
 
         <!-- Ledger Table -->
         <div
-            class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-xl shadow-gray-200/50 dark:shadow-black/20 border border-white/40 dark:border-gray-700 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                <h2 class="text-lg font-bold text-gray-900 dark:text-white">Ledger History</h2>
+                <h2 class="text-lg font-bold text-gray-900 dark:text-white">{{ __('messages.ledger_history') }}</h2>
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -319,10 +319,10 @@
                                 Description</th>
                             <th scope="col"
                                 class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                Charge (Bill)</th>
+                                {{ __('messages.charge_bill') }}</th>
                             <th scope="col"
                                 class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                Payment (Receipt)</th>
+                                {{ __('messages.payment_receipt') }}</th>
                             <th scope="col"
                                 class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                 Balance</th>
@@ -345,7 +345,7 @@
                                         {{ $row['description'] }}
                                         @if($row['type'] === 'Invoice' && isset($row['id']))
                                             <a href="{{ route('invoices.pdf', $row['id']) }}" target="_blank"
-                                                class="ml-2 text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
+                                                class="ml-2 p-1.5 text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 dark:text-blue-400 dark:hover:text-blue-300 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 rounded-lg transition-colors dark:text-indigo-400 dark:hover:text-indigo-300"
                                                 title="Download PDF">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -353,6 +353,15 @@
                                                     </path>
                                                 </svg>
                                             </a>
+                                            
+                                            <form action="{{ route('invoices.whatsapp', $row['id']) }}" method="POST" class="inline" title="Send via WhatsApp" x-data @submit.prevent="$dispatch('open-confirm', { message: 'Send WhatsApp bill notification for Invoice #{{ addslashes($row['description']) }} to {{ addslashes($customer->name) }}?', onConfirm: () => $el.submit() })">
+                                                @csrf
+                                                <button type="submit" class="ml-2 text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300">
+                                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                                                    </svg>
+                                                </button>
+                                            </form>
                                             
                                             <span class="ml-2 text-xs font-medium px-2 py-0.5 rounded-full {{ $row['status'] === 'Paid' ? 'bg-green-100 text-green-800' : ($row['status'] === 'Partially Paid' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
                                                 {{ $row['status'] }}
@@ -399,7 +408,7 @@
                         @empty
                             <tr>
                                 <td colspan="6" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
-                                    <p>No billing or payment history found for this customer.</p>
+                                    <p>{{ __('messages.no_billing_history') }}</p>
                                 </td>
                             </tr>
                         @endforelse
@@ -415,7 +424,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
-                                    Unbilled Charges (up to today)
+                                    {{ __('messages.unbilled_charges') }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-gray-900 dark:text-white">
                                     ₹{{ number_format($unbilledAmount, 2) }}
@@ -486,12 +495,12 @@
                                 }">
                                     <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white"
                                         id="modal-title">
-                                        Add Newspaper Subscription
+                                        {{ __('messages.add_newspaper') }} Subscription
                                     </h3>
                                     <div class="mt-4 space-y-4">
                                         <div>
                                             <label for="newspaper_id"
-                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Newspaper</label>
+                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.newspaper') }}</label>
                                             <select name="newspaper_id" id="newspaper_id" x-model="selectedNewspaper"
                                                 @change="updatePrice()"
                                                 class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md"
@@ -508,7 +517,7 @@
                                         <div class="grid grid-cols-2 gap-4">
                                             <div>
                                                 <label for="quantity"
-                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantity</label>
+                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.quantity') }}</label>
                                                 <input type="number" name="quantity" id="quantity" value="1" min="1"
                                                     class="mt-1 focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
                                                     required>
@@ -602,7 +611,7 @@
                                 <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                                     <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white"
                                         id="modal-title">
-                                        Receive Payment
+                                        {{ __('messages.receive_payment') }}
                                     </h3>
                                     <div class="mt-4 space-y-4">
                                         <div>
@@ -623,7 +632,7 @@
 
                                         <div>
                                             <label for="payment_date"
-                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Date</label>
+                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.date') }}</label>
                                             <input type="date" name="payment_date" id="payment_date"
                                                 value="{{ date('Y-m-d') }}"
                                                 class="mt-1 focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
@@ -698,7 +707,7 @@
                                 <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
                                     <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white"
                                         id="modal-title">
-                                        Log Leave (Suspension)
+                                        {{ __('messages.log_leave') }} (Suspension)
                                     </h3>
                                     <p class="text-sm text-gray-500 mt-1">Select a date range where the customer will
                                         not receive newspapers. They will not be billed for these days.</p>
@@ -814,7 +823,7 @@
                                     <div class="mt-4 space-y-4">
                                         <div>
                                             <label for="extra_newspaper_id"
-                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Newspaper</label>
+                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.newspaper') }}</label>
                                             <select name="newspaper_id" id="extra_newspaper_id"
                                                 x-model="selectedExtraNewspaper" @change="updateExtraPrice()"
                                                 class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md"
@@ -827,7 +836,7 @@
                                         </div>
                                         <div>
                                             <label for="extra_date"
-                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Date</label>
+                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.date') }}</label>
                                             <input type="date" name="date" id="extra_date" 
                                                 x-model="extraDate" @change="updateExtraPrice()"
                                                 class="mt-1 focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
@@ -836,7 +845,7 @@
                                         <div class="grid grid-cols-2 gap-4">
                                             <div>
                                                 <label for="extra_quantity"
-                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantity</label>
+                                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.quantity') }}</label>
                                                 <input type="number" name="quantity" id="extra_quantity" 
                                                     x-model="extraQuantity" @input="updateExtraPrice()"
                                                     min="1"
@@ -872,7 +881,7 @@
             </div>
         </div>
 
-        <!-- Generate Bill Modal -->
+        <!-- {{ __('messages.generate_bill') }} Modal -->
         <div x-show="showGenerateBillModal" class="fixed z-50 inset-0 overflow-y-auto" style="display: none;">
             <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                 <div x-show="showGenerateBillModal" @click="showGenerateBillModal = false"
@@ -900,7 +909,7 @@
                                 <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                                     <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white"
                                         id="modal-title">
-                                        Generate Bill
+                                        {{ __('messages.generate_bill') }}
                                     </h3>
                                     <div class="mt-4 space-y-4">
                                         <p class="text-sm text-gray-500 dark:text-gray-400">
@@ -921,7 +930,7 @@
                         <div class="bg-gray-50 dark:bg-gray-700/50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                             <button type="submit"
                                 class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors">
-                                Generate Bill
+                                {{ __('messages.generate_bill') }}
                             </button>
                             <button type="button" @click="showGenerateBillModal = false"
                                 class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-colors">
@@ -972,7 +981,7 @@
                             <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Edit Subscription</h3>
                             <div class="mt-4 space-y-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Newspaper</label>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.newspaper') }}</label>
                                     <select name="newspaper_id" x-model="editSub.newspaper_id" @change="updateEditPrice()" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white" required>
                                         @foreach($newspapers as $newspaper)
                                             <option value="{{ $newspaper->id }}">{{ $newspaper->name }}</option>
@@ -981,17 +990,17 @@
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Start Date</label>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.start_date') }}</label>
                                         <input type="date" name="start_date" x-model="editSub.start_date" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white" required>
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantity</label>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.quantity') }}</label>
                                         <input type="number" name="quantity" min="1" x-model="editSub.quantity" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white" required>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Price (₹)</label>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.price') }} (₹)</label>
                                         <input type="number" name="price" step="0.01" min="0" x-model="editSub.price" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white" required>
                                     </div>
                                     <div>
@@ -1005,8 +1014,8 @@
                             </div>
                         </div>
                         <div class="bg-gray-50 dark:bg-gray-700/50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                            <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 sm:ml-3 sm:w-auto sm:text-sm">Save Changes</button>
-                            <button type="button" @click="showEditSubscriptionModal = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
+                            <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 sm:ml-3 sm:w-auto sm:text-sm">{{ __('messages.save_changes') }}</button>
+                            <button type="button" @click="showEditSubscriptionModal = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">{{ __('messages.cancel') }}</button>
                         </div>
                     </form>
                 </div>
@@ -1028,7 +1037,7 @@
                             <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Edit Extra Newspaper</h3>
                             <div class="mt-4 space-y-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Newspaper</label>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.newspaper') }}</label>
                                     <select name="newspaper_id" x-model="editExtra.newspaper_id" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white" required>
                                         @foreach($newspapers as $newspaper)
                                             <option value="{{ $newspaper->id }}">{{ $newspaper->name }}</option>
@@ -1036,11 +1045,11 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Date</label>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.date') }}</label>
                                     <input type="date" name="date" x-model="editExtra.date" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white" required>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantity</label>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.quantity') }}</label>
                                     <input type="number" name="quantity" min="1" x-model="editExtra.quantity" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white" required>
                                 </div>
                                 <div>
@@ -1050,8 +1059,8 @@
                             </div>
                         </div>
                         <div class="bg-gray-50 dark:bg-gray-700/50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                            <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 sm:ml-3 sm:w-auto sm:text-sm">Save Changes</button>
-                            <button type="button" @click="showEditExtraModal = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
+                            <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 sm:ml-3 sm:w-auto sm:text-sm">{{ __('messages.save_changes') }}</button>
+                            <button type="button" @click="showEditExtraModal = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">{{ __('messages.cancel') }}</button>
                         </div>
                     </form>
                 </div>
@@ -1099,8 +1108,8 @@
                             </div>
                         </div>
                         <div class="bg-gray-50 dark:bg-gray-700/50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                            <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 sm:ml-3 sm:w-auto sm:text-sm">Save Changes</button>
-                            <button type="button" @click="showEditLeaveModal = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
+                            <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 sm:ml-3 sm:w-auto sm:text-sm">{{ __('messages.save_changes') }}</button>
+                            <button type="button" @click="showEditLeaveModal = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">{{ __('messages.cancel') }}</button>
                         </div>
                     </form>
                 </div>

@@ -1,6 +1,31 @@
 <aside :class="sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'"
     class="fixed inset-y-0 left-0 z-[60] w-64 overflow-y-auto transition duration-300 transform bg-white dark:bg-gray-900 lg:translate-x-0 lg:static lg:inset-0 shadow-lg border-r border-gray-200 dark:border-gray-800">
-    <div class="mt-4">
+    <div class="mt-4" x-data="{
+        deferredPrompt: null,
+        showInstallBtn: false,
+        init() {
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                this.deferredPrompt = e;
+                this.showInstallBtn = true;
+            });
+            window.addEventListener('appinstalled', () => {
+                this.showInstallBtn = false;
+                this.deferredPrompt = null;
+            });
+        },
+        installApp() {
+            if (this.deferredPrompt) {
+                this.deferredPrompt.prompt();
+                this.deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        this.showInstallBtn = false;
+                    }
+                    this.deferredPrompt = null;
+                });
+            }
+        }
+    }">
         <!-- Close button for mobile -->
         <div class="flex items-center justify-between px-4 lg:hidden mb-4">
             <span class="text-xl font-bold text-gray-900 dark:text-white">Menu</span>
@@ -10,6 +35,14 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
                     </path>
                 </svg>
+            </button>
+        </div>
+        
+        <!-- Install App Button (Visible only when PWA install is available) -->
+        <div x-show="showInstallBtn" x-transition class="px-4 mb-4" style="display: none;">
+            <button @click="installApp" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-dark hover:to-blue-700 text-white py-2.5 px-4 rounded-xl text-sm font-bold shadow-lg shadow-blue-500/30 transform hover:-translate-y-0.5 transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                Install App
             </button>
         </div>
         <style>
@@ -30,11 +63,11 @@
                             </path>
                         </svg>
                     </span>
-                    <span class="ml-2 text-sm tracking-wide truncate">Dashboard</span>
+                    <span class="ml-2 text-sm tracking-wide truncate">{{ __('messages.dashboard') }}</span>
                 </a>
             </li>
-            @can('manage_newspapers')
-                <li class="mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider ml-4 mb-2">Master Data</li>
+            @can('view_newspapers')
+                <li class="mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider ml-4 mb-2">{{ __('messages.master_data') }}</li>
                 <li>
                     <a href="{{ route('newspapers.index') }}"
                         class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white border-l-4 rounded-r-md {{ request()->routeIs('newspapers.*') ? 'border-active-sidebar text-primary dark:text-white bg-gray-50 dark:bg-gray-800' : 'border-transparent' }} pr-6 transition-colors">
@@ -45,11 +78,11 @@
                                 </path>
                             </svg>
                         </span>
-                        <span class="ml-2 text-sm tracking-wide truncate">Newspapers</span>
+                        <span class="ml-2 text-sm tracking-wide truncate">{{ __('messages.newspapers') }}</span>
                     </a>
                 </li>
             @endcan
-            @can('manage_customers')
+            @can('view_customers')
                 <li>
                     <a href="{{ route('customers.index') }}"
                         class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white border-l-4 rounded-r-md {{ request()->routeIs('customers.*') ? 'border-active-sidebar text-primary dark:text-white bg-gray-50 dark:bg-gray-800' : 'border-transparent' }} pr-6 transition-colors">
@@ -60,13 +93,13 @@
                                 </path>
                             </svg>
                         </span>
-                        <span class="ml-2 text-sm tracking-wide truncate">Customers</span>
+                        <span class="ml-2 text-sm tracking-wide truncate">{{ __('messages.customers') }}</span>
                     </a>
                 </li>
             @endcan
 
-            @can('manage_collections')
-                <li class="mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider ml-4 mb-2">Finance</li>
+            @can('view_collections')
+                <li class="mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider ml-4 mb-2">{{ __('messages.finance') }}</li>
                 <li>
                     <a href="{{ route('daily-collections.index') }}"
                         class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white border-l-4 rounded-r-md {{ request()->routeIs('daily-collections.*') ? 'border-active-sidebar text-primary dark:text-white bg-gray-50 dark:bg-gray-800' : 'border-transparent' }} pr-6 transition-colors">
@@ -77,11 +110,11 @@
                                 </path>
                             </svg>
                         </span>
-                        <span class="ml-2 text-sm tracking-wide truncate">Daily Collections</span>
+                        <span class="ml-2 text-sm tracking-wide truncate">{{ __('messages.daily_collections') }}</span>
                     </a>
                 </li>
             @endcan
-            @can('manage_payments')
+            @can('view_payments')
                 <li>
                     <a href="{{ route('payments.index') }}"
                         class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white border-l-4 rounded-r-md {{ request()->routeIs('payments.*') ? 'border-active-sidebar text-primary dark:text-white bg-gray-50 dark:bg-gray-800' : 'border-transparent' }} pr-6 transition-colors">
@@ -92,11 +125,11 @@
                                 </path>
                             </svg>
                         </span>
-                        <span class="ml-2 text-sm tracking-wide truncate">Payments History</span>
+                        <span class="ml-2 text-sm tracking-wide truncate">{{ __('messages.payments_history') }}</span>
                     </a>
                 </li>
             @endcan
-            @can('manage_purchases')
+            @can('view_purchases')
                 <li>
                     <a href="{{ route('purchases.index') }}"
                         class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white border-l-4 rounded-r-md {{ request()->routeIs('purchases.*') ? 'border-active-sidebar text-primary dark:text-white bg-gray-50 dark:bg-gray-800' : 'border-transparent' }} pr-6 transition-colors">
@@ -107,13 +140,13 @@
                                 </path>
                             </svg>
                         </span>
-                        <span class="ml-2 text-sm tracking-wide truncate">Vendor Purchases</span>
+                        <span class="ml-2 text-sm tracking-wide truncate">{{ __('messages.vendor_purchases') }}</span>
                     </a>
                 </li>
             @endcan
 
             @can('view_reports')
-                <li class="mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider ml-4 mb-2">Reports</li>
+                <li class="mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider ml-4 mb-2">{{ __('messages.reports') }}</li>
                 <li>
                     <a href="{{ route('reports.index') }}"
                         class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white border-l-4 rounded-r-md {{ request()->routeIs('reports.*') ? 'border-active-sidebar text-primary dark:text-white bg-gray-50 dark:bg-gray-800' : 'border-transparent' }} pr-6 transition-colors">
@@ -124,13 +157,13 @@
                                 </path>
                             </svg>
                         </span>
-                        <span class="ml-2 text-sm tracking-wide truncate">Reports</span>
+                        <span class="ml-2 text-sm tracking-wide truncate">{{ __('messages.reports') }}</span>
                     </a>
                 </li>
             @endcan
 
             @can('manage_settings')
-                <li class="mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider ml-4 mb-2">System</li>
+                <li class="mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider ml-4 mb-2">{{ __('messages.system') }}</li>
                 <li>
                     <a href="{{ route('settings.index') }}"
                         class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white border-l-4 rounded-r-md {{ request()->routeIs('settings.*') ? 'border-active-sidebar text-primary dark:text-white bg-gray-50 dark:bg-gray-800' : 'border-transparent' }} pr-6 transition-colors">
@@ -143,11 +176,12 @@
                                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
                         </span>
-                        <span class="ml-2 text-sm tracking-wide truncate">Settings</span>
+                        <span class="ml-2 text-sm tracking-wide truncate">{{ __('messages.settings') }}</span>
                     </a>
                 </li>
             @endcan
-            @if(is_null(auth()->user()->owner_id))
+            @role('Super Admin')
+                <li class="mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider ml-4 mb-2">{{ __('messages.saas_admin') }}</li>
                 <li>
                     <a href="{{ route('users.index') }}"
                         class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white border-l-4 rounded-r-md {{ request()->routeIs('users.*') ? 'border-active-sidebar text-primary dark:text-white bg-gray-50 dark:bg-gray-800' : 'border-transparent' }} pr-6 transition-colors">
@@ -158,7 +192,20 @@
                                 </path>
                             </svg>
                         </span>
-                        <span class="ml-2 text-sm tracking-wide truncate">Users</span>
+                        <span class="ml-2 text-sm tracking-wide truncate">{{ __('messages.tenants_users') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('plans.index') }}"
+                        class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-white border-l-4 rounded-r-md {{ request()->routeIs('plans.*') ? 'border-active-sidebar text-primary dark:text-white bg-gray-50 dark:bg-gray-800' : 'border-transparent' }} pr-6 transition-colors">
+                        <span class="inline-flex justify-center items-center ml-4">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
+                                </path>
+                            </svg>
+                        </span>
+                        <span class="ml-2 text-sm tracking-wide truncate">{{ __('messages.plans_pricing') }}</span>
                     </a>
                 </li>
                 <li>
@@ -171,10 +218,10 @@
                                 </path>
                             </svg>
                         </span>
-                        <span class="ml-2 text-sm tracking-wide truncate">Roles</span>
+                        <span class="ml-2 text-sm tracking-wide truncate">{{ __('messages.roles') }}</span>
                     </a>
                 </li>
-            @endif
+            @endrole
         </ul>
     </div>
 </aside>

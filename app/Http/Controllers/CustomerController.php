@@ -8,8 +8,11 @@ use App\Models\CustomerLeave;
 use App\Models\Newspaper;
 use App\Repositories\Interfaces\InvoiceRepositoryInterface;
 use App\Services\CustomerService;
+use App\Services\SubscriptionLimitService;
+use App\Services\WhatsAppService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CustomerController extends Controller
 {
@@ -20,23 +23,38 @@ class CustomerController extends Controller
         $this->customerService = $customerService;
     }
 
-    public function index(Request $request)
+    public function index(Request $request, SubscriptionLimitService $limitService)
     {
         $search = $request->input('search');
         $customers = $this->customerService->getPaginatedCustomers($search);
 
-        return view('customers.index', compact('customers', 'search'));
+        $canAddCustomer = $limitService->canCreateCustomer(auth()->user()->tenant);
+
+        return view('customers.index', compact('customers', 'search', 'canAddCustomer'));
     }
 
     public function create()
     {
-        return view('customers.create');
+        $lastCustomer = Customer::orderBy('id', 'desc')->first();
+        $nextNum = $lastCustomer ? ($lastCustomer->id + 1) : 1;
+        $nextId = 'CUST'.str_pad($nextNum, 4, '0', STR_PAD_LEFT);
+
+        return view('customers.create', compact('nextId'));
     }
 
-    public function store(CustomerRequest $request)
+    public function store(CustomerRequest $request, SubscriptionLimitService $limitService)
     {
-        // For production, handle file upload for customer_photo here before passing to service
+        if ($limitService->hasReachedCustomerLimit(auth()->user()->tenant)) {
+            return redirect()->route('customers.index')->with('error', 'You have reached your customer limit. Upgrade your plan to add more customers.');
+        }
+
         $data = $request->validated();
+        if (empty($data['start_date'])) {
+            $data['start_date'] = now()->format('Y-m-d');
+        }
+        if (empty($data['payment_frequency'])) {
+            $data['payment_frequency'] = 'Monthly';
+        }
 
         if ($request->hasFile('customer_photo')) {
             $data['customer_photo'] = $request->file('customer_photo')->store('customers', 'public');
@@ -186,7 +204,23 @@ class CustomerController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Leave logged successfully.');
+        // Notify customer on WhatsApp
+        try {
+            $customer = Customer::find($request->customer_id);
+            if ($customer && $customer->mobile) {
+                $mobile = strlen($customer->mobile) == 10 ? '91'.$customer->mobile : $customer->mobile;
+                $newspaperName = $request->newspaper_id ? Newspaper::find($request->newspaper_id)?->name : 'All Newspapers';
+                $fromFmt = Carbon::parse($request->start_date)->format('d M, Y');
+                $toFmt = Carbon::parse($request->end_date)->format('d M, Y');
+
+                $msg = "Hello {$customer->name},\n\nYour newspaper delivery pause (Leave) has been logged successfully.\n\n*Details:*\n- Item: {$newspaperName}\n- From: {$fromFmt}\n- To: {$toFmt}\n\nYou will not be billed for these days.\nThank you!";
+                app(WhatsAppService::class)->sendMessage($mobile, $msg);
+            }
+        } catch (\Exception $e) {
+            Log::warning('WhatsApp leave notification failed: '.$e->getMessage());
+        }
+
+        return redirect()->back()->with('success', 'Leave logged successfully and notification sent on WhatsApp.');
     }
 
     public function updateLeave(Request $request)
@@ -205,7 +239,7 @@ class CustomerController extends Controller
         $query = CustomerLeave::where('customer_id', $request->customer_id)
             ->whereBetween('date', [$request->old_start_date, $request->old_end_date])
             ->where('is_billed', false);
-            
+
         if ($request->old_newspaper_id) {
             $query->where('newspaper_id', $request->old_newspaper_id);
         } else {
@@ -268,5 +302,57 @@ class CustomerController extends Controller
         } else {
             return redirect()->back()->with('error', 'No unbilled charges found for the selected period.');
         }
+    }
+
+    public function bulkActions(Request $request)
+    {
+        $request->validate([
+            'customer_ids' => 'required|array',
+            'customer_ids.*' => 'exists:customers,id',
+            'action' => 'required|in:generate_bills,send_whatsapp_bills',
+            'bill_date' => 'required_if:action,generate_bills|nullable|date',
+        ]);
+
+        $customerIds = $request->input('customer_ids');
+        $action = $request->input('action');
+        $invoiceRepo = app(InvoiceRepositoryInterface::class);
+        $whatsapp = app(WhatsAppService::class);
+
+        $successCount = 0;
+        $messageDetails = [];
+
+        if ($action === 'generate_bills') {
+            $billDate = Carbon::parse($request->input('bill_date', now()));
+            foreach ($customerIds as $id) {
+                $customer = Customer::find($id);
+                if ($customer) {
+                    $invoice = $invoiceRepo->generateInvoiceForCustomer($customer, $billDate);
+                    if ($invoice) {
+                        $successCount++;
+                    }
+                }
+            }
+
+            return redirect()->back()->with('success', "Generated bills for {$successCount} customer(s).");
+        } elseif ($action === 'send_whatsapp_bills') {
+            foreach ($customerIds as $id) {
+                $customer = Customer::with('invoices')->find($id);
+                if ($customer && $customer->mobile) {
+                    $latestInvoice = $customer->invoices()->latest()->first();
+                    if ($latestInvoice) {
+                        $pdfUrl = route('invoices.pdf', $latestInvoice->id);
+                        $msg = "Hello {$customer->name},\n\nYour newspaper bill balance is *₹".number_format($latestInvoice->total_amount, 2)."*.\nBilling Month: ".Carbon::parse($latestInvoice->billing_month)->format('M Y')."\nInvoice #: {$latestInvoice->invoice_number}\n\n📄 Download Bill PDF:\n{$pdfUrl}\n\nPlease settle your payment at your earliest convenience.\nThank you!";
+                        $sent = $whatsapp->sendMessage($mobile, $msg);
+                        if ($sent) {
+                            $successCount++;
+                        }
+                    }
+                }
+            }
+
+            return redirect()->back()->with('success', "Sent WhatsApp bill notification to {$successCount} customer(s).");
+        }
+
+        return redirect()->back()->with('error', 'Invalid action selected.');
     }
 }

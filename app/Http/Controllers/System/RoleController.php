@@ -4,31 +4,33 @@ namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
     public function index()
     {
-        $roles = Role::where('name', '!=', 'Super Admin')->get();
+        $roles = Role::all();
+
         return view('system.roles.index', compact('roles'));
     }
 
     public function create()
     {
         $permissions = Permission::all();
+
         return view('system.roles.create', compact('permissions'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:roles,name'
+            'name' => 'required|string|max:255|unique:roles,name',
         ]);
 
         $role = Role::create(['name' => $request->name]);
-        
+
         if ($request->has('permissions')) {
             $role->syncPermissions($request->permissions);
         }
@@ -38,7 +40,9 @@ class RoleController extends Controller
 
     public function edit(Role $role)
     {
-        if ($role->name === 'Super Admin') abort(403);
+        if ($role->name === 'Super Admin') {
+            abort(403);
+        }
         $permissions = Permission::all();
         $rolePermissions = $role->permissions->pluck('name')->toArray();
 
@@ -47,10 +51,12 @@ class RoleController extends Controller
 
     public function update(Request $request, Role $role)
     {
-        if ($role->name === 'Super Admin') abort(403);
+        if ($role->name === 'Super Admin') {
+            abort(403);
+        }
 
         $request->validate([
-            'name' => 'required|string|max:255|unique:roles,name,'.$role->id
+            'name' => 'required|string|max:255|unique:roles,name,'.$role->id,
         ]);
 
         $role->update(['name' => $request->name]);
@@ -66,8 +72,11 @@ class RoleController extends Controller
 
     public function destroy(Role $role)
     {
-        if ($role->name === 'Super Admin') abort(403);
+        if ($role->name === 'Super Admin') {
+            abort(403);
+        }
         $role->delete();
+
         return redirect()->route('roles.index')->with('success', 'Role deleted successfully.');
     }
 }

@@ -29,10 +29,14 @@ class ProfileController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'language' => ['nullable', 'string', 'in:en,hi'],
         ]);
 
         $user->name = $request->name;
         $user->email = $request->email;
+        if ($request->has('language')) {
+            $user->language = $request->language;
+        }
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);

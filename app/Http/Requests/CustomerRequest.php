@@ -34,9 +34,10 @@ class CustomerRequest extends FormRequest
             'city' => 'nullable|string|max:255',
             'pincode' => 'nullable|string|max:10',
             'delivery_address' => 'nullable|string',
-            'start_date' => 'required|date',
+            'start_date' => 'nullable|date',
             'status' => 'required|in:Active,Inactive',
-            'payment_frequency' => 'required|in:Daily,Weekly,Monthly',
+            'payment_frequency' => 'nullable|in:Daily,Weekly,Monthly',
+            'previous_balance' => 'nullable|numeric',
             'notes' => 'nullable|string',
             'customer_photo' => 'nullable|image|max:2048', // optional file upload
         ];

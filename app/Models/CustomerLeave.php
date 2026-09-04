@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use App\Traits\BelongsToUser;
+use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class CustomerLeave extends Model
 {
-    use BelongsToUser, HasFactory;
+    use BelongsToTenant, HasFactory;
 
     protected $fillable = [
         'customer_id',

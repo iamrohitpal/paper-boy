@@ -29,16 +29,19 @@ class PaymentController extends Controller
     {
         $customers = Customer::where('status', 'Active')->orderBy('name')->get();
 
-        // If an invoice is pre-selected
-        $selectedInvoiceId = $request->input('invoice_id');
+        $preselectedCustomerId = $request->input('customer_id');
+        $preselectedInvoiceId = $request->input('invoice_id');
         $selectedInvoice = null;
-        if ($selectedInvoiceId) {
-            $selectedInvoice = Invoice::find($selectedInvoiceId);
+        if ($preselectedInvoiceId) {
+            $selectedInvoice = Invoice::find($preselectedInvoiceId);
+            if ($selectedInvoice && ! $preselectedCustomerId) {
+                $preselectedCustomerId = $selectedInvoice->customer_id;
+            }
         }
 
         $invoices = Invoice::where('status', '!=', 'Paid')->orderBy('invoice_number', 'desc')->get();
 
-        return view('payments.create', compact('customers', 'invoices', 'selectedInvoice'));
+        return view('payments.create', compact('customers', 'invoices', 'selectedInvoice', 'preselectedCustomerId', 'preselectedInvoiceId'));
     }
 
     public function store(PaymentRequest $request)

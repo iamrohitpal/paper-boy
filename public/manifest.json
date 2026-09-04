@@ -1,16 +1,26 @@
 {
-  "name": "PaperBoy Distributor",
+  "name": "Paper Boy",
   "short_name": "PaperBoy",
-  "description": "Newspaper Distributor Management System",
-  "start_url": "/paper-boy/public/login",
+  "id": "/dashboard",
+  "start_url": "dashboard",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#ffffff",
   "theme_color": "#4f46e5",
+  "description": "Newspaper Distributor Management System",
   "icons": [
     {
-      "src": "icon.svg",
-      "sizes": "192x192 512x512",
-      "type": "image/svg+xml"
+      "src": "icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

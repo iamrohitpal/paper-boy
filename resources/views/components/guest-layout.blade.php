@@ -21,14 +21,14 @@
     <title>{{ $appName }}</title>
 
     <!-- PWA Meta Tags -->
-    <link rel="manifest" href="/paper-boy/public/manifest.json">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
     <meta name="theme-color" content="{{ $primaryColor }}">
     @if(isset($settings) && $settings->logo_path)
         <link rel="icon" href="{{ Storage::url($settings->logo_path) }}">
         <link rel="apple-touch-icon" href="{{ Storage::url($settings->logo_path) }}">
     @else
-        <link rel="icon" href="/paper-boy/public/icon.svg">
-        <link rel="apple-touch-icon" href="/paper-boy/public/icon.svg">
+        <link rel="icon" href="{{ asset('icon-192x192.png') }}">
+        <link rel="apple-touch-icon" href="{{ asset('icon-192x192.png') }}">
     @endif
 
     <!-- Fonts -->
@@ -42,7 +42,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/paper-boy/public/sw.js')
+                navigator.serviceWorker.register("{{ asset('sw.js') }}")
                     .then(registration => {
                         console.log('ServiceWorker registration successful with scope: ', registration.scope);
                     })

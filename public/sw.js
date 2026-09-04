@@ -1,46 +1,61 @@
-const CACHE_NAME = 'paperboy-v1';
-const urlsToCache = [
-  '/paper-boy/public/',
-  '/paper-boy/public/login',
-  '/paper-boy/public/manifest.json',
-  '/paper-boy/public/icon.svg'
+const CACHE_NAME = 'paperboy-v2';
+const OFFLINE_URL = 'offline.html';
+
+const FILES_TO_CACHE = [
+    OFFLINE_URL,
+    'icon-192x192.png',
+    'icon-512x512.png',
+    'manifest.json'
 ];
 
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Opened cache');
-        // Do not strictly fail if a URL is not cacheable (like cross origin or not found initially)
-        return Promise.allSettled(urlsToCache.map(url => cache.add(url)));
-      })
-  );
-});
-
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Cache hit - return response
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      })
-  );
-});
-
-self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME];
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
-          }
+self.addEventListener('install', (event) => {
+    event.waitUntil(
+        caches.open(CACHE_NAME).then((cache) => {
+            console.log('[ServiceWorker] Pre-caching assets');
+            return Promise.all(
+                FILES_TO_CACHE.map(url => {
+                    return cache.add(url).catch(reason => console.log('[ServiceWorker] Cache add failed for', url, reason));
+                })
+            );
         })
-      );
-    })
-  );
+    );
+    self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+    event.waitUntil(
+        caches.keys().then((keyList) => {
+            return Promise.all(keyList.map((key) => {
+                if (key !== CACHE_NAME) {
+                    console.log('[ServiceWorker] Removing old cache', key);
+                    return caches.delete(key);
+                }
+            }));
+        })
+    );
+    self.clients.claim();
+});
+
+self.addEventListener('fetch', (event) => {
+    if (event.request.method !== 'GET') {
+        return;
+    }
+
+    // Navigation requests (HTML pages)
+    if (event.request.mode === 'navigate' || (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html'))) {
+        event.respondWith(
+            fetch(event.request)
+                .catch(() => {
+                    return caches.match(OFFLINE_URL) || caches.match('./offline.html');
+                })
+        );
+        return;
+    }
+
+    // Static assets
+    event.respondWith(
+        caches.match(event.request).then((response) => {
+            return response || fetch(event.request);
+        })
+    );
 });

@@ -53,6 +53,21 @@ class InvoiceService
                         ->whereBetween('date', [$invoice->period_start, $invoice->period_end])
                         ->update(['is_billed' => false]);
                 }
+
+                // Reset last_billed_date for customer's subscriptions to allow re-billing
+                $customer = $invoice->customer;
+                if ($customer) {
+                    $prevInvoice = $customer->invoices()
+                        ->where('id', '!=', $invoice->id)
+                        ->latest('period_end')
+                        ->first();
+
+                    $newLastBilled = $prevInvoice ? $prevInvoice->period_end : null;
+                    foreach ($customer->subscriptions as $sub) {
+                        $sub->update(['last_billed_date' => $newLastBilled]);
+                    }
+                }
+
                 $this->invoiceRepository->delete($id);
             }
 

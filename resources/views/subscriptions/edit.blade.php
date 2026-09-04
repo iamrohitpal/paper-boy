@@ -9,7 +9,7 @@
                 </svg>
             </a>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Edit Subscription') }}
+                {{ __('{{ __('messages.edit_subscription') }}') }}
             </h2>
         </div>
     </x-slot>
@@ -23,12 +23,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Customer -->
                 <div>
-                    <label for="customer_id" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Customer
-                        *</label>
+                    <label for="customer_id" class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('messages.customer') }} *</label>
                     <select name="customer_id" id="customer_id"
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 rounded-md shadow-sm"
                         required>
-                        <option value="">Select a Customer</option>
+                        <option value="">{{ __('messages.select_a_customer') }}</option>
                         @foreach($customers as $customer)
                             <option value="{{ $customer->id }}" {{ old('customer_id', $subscription->customer_id) == $customer->id ? 'selected' : '' }}>
                                 {{ $customer->name }} ({{ $customer->customer_id }})
@@ -41,11 +40,11 @@
                 <!-- Newspaper -->
                 <div>
                     <label for="newspaper_id"
-                        class="block font-medium text-sm text-gray-700 dark:text-gray-300">Newspaper *</label>
+                        class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('messages.newspaper') }} *</label>
                     <select name="newspaper_id" id="newspaper_id"
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 rounded-md shadow-sm"
                         required>
-                        <option value="">Select a Newspaper</option>
+                        <option value="">{{ __('messages.select_a_newspaper') }}</option>
                         @foreach($newspapers as $newspaper)
                             <option value="{{ $newspaper->id }}" data-price="{{ $newspaper->selling_price }}" {{ old('newspaper_id', $subscription->newspaper_id) == $newspaper->id ? 'selected' : '' }}>
                                 {{ $newspaper->name }} (₹{{ number_format($newspaper->selling_price, 2) }})
@@ -57,8 +56,7 @@
 
                 <!-- Quantity -->
                 <div>
-                    <label for="quantity" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Quantity
-                        *</label>
+                    <label for="quantity" class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('messages.quantity') }} *</label>
                     <input type="number" name="quantity" id="quantity"
                         value="{{ old('quantity', $subscription->quantity) }}" min="1"
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 rounded-md shadow-sm"
@@ -68,20 +66,18 @@
 
                 <!-- Price Override -->
                 <div>
-                    <label for="price" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Agreed Price
-                        (per item) *</label>
+                    <label for="price" class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('messages.agreed_price_per_item') }} *</label>
                     <input type="number" step="0.01" name="price" id="price"
                         value="{{ old('price', $subscription->price) }}"
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 rounded-md shadow-sm"
                         required>
-                    <p class="text-xs text-gray-500 mt-1">Can be different from the newspaper's default MRP.</p>
+                    <p class="text-xs text-gray-500 mt-1">{{ __('messages.different_from_mrp') }}</p>
                     @error('price') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
                 <!-- Start Date -->
                 <div>
-                    <label for="start_date" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Start
-                        Date *</label>
+                    <label for="start_date" class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('messages.start_date') }} *</label>
                     <input type="date" name="start_date" id="start_date"
                         value="{{ old('start_date', $subscription->start_date ? $subscription->start_date->format('Y-m-d') : '') }}"
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 rounded-md shadow-sm"
@@ -91,8 +87,7 @@
 
                 <!-- End Date -->
                 <div>
-                    <label for="end_date" class="block font-medium text-sm text-gray-700 dark:text-gray-300">End Date
-                        (Optional)</label>
+                    <label for="end_date" class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('messages.end_date_optional') }}</label>
                     <input type="date" name="end_date" id="end_date"
                         value="{{ old('end_date', $subscription->end_date ? $subscription->end_date->format('Y-m-d') : '') }}"
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 rounded-md shadow-sm">
@@ -102,27 +97,26 @@
                 <!-- Delivery Days -->
                 <div>
                     <label for="delivery_days"
-                        class="block font-medium text-sm text-gray-700 dark:text-gray-300">Delivery Schedule *</label>
+                        class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('messages.delivery_schedule') }} *</label>
                     <select name="delivery_days" id="delivery_days" x-model="deliveryType"
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 rounded-md shadow-sm">
-                        <option value="Daily">Daily</option>
-                        <option value="Sunday Only">Sunday Only</option>
-                        <option value="Custom">Custom Days</option>
+                        <option value="Daily">{{ __('messages.daily') }}</option>
+                        <option value="Sunday Only">{{ __('messages.sunday_only') }}</option>
+                        <option value="Custom">{{ __('messages.custom_days') }}</option>
                     </select>
                     @error('delivery_days') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
 
                 <!-- Status -->
                 <div>
-                    <label for="status" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Status
-                        *</label>
+                    <label for="status" class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('messages.status') }} *</label>
                     <select name="status" id="status"
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 rounded-md shadow-sm">
                         <option value="Active" {{ old('status', $subscription->status) == 'Active' ? 'selected' : '' }}>
                             Active</option>
                         <option value="Paused" {{ old('status', $subscription->status) == 'Paused' ? 'selected' : '' }}>
                             Paused</option>
-                        <option value="Cancelled" {{ old('status', $subscription->status) == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
+                        <option value="Cancelled" {{ old('status', $subscription->status) == 'Cancelled' ? 'selected' : '' }}>{{ __('messages.cancelled') }}</option>
                     </select>
                     @error('status') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
@@ -132,8 +126,7 @@
             <div x-show="deliveryType === 'Custom'"
                 class="mt-6 p-4 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-750"
                 style="display: none;">
-                <label class="block font-medium text-sm text-gray-700 dark:text-gray-300 mb-2">Select Custom Delivery
-                    Days *</label>
+                <label class="block font-medium text-sm text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.select_custom_delivery_days') }} *</label>
                 <div class="flex flex-wrap gap-4">
                     @php $customDays = old('custom_days', $subscription->custom_days ?? []); @endphp
                     @foreach(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as $day)
@@ -150,10 +143,9 @@
 
             <div class="mt-6 flex justify-end">
                 <a href="{{ route('subscriptions.index') }}"
-                    class="mr-3 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">Cancel</a>
+                    class="mr-3 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">{{ __('messages.cancel') }}</a>
                 <button type="submit"
-                    class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">Update
-                    Subscription</button>
+                    class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">{{ __('messages.update_subscription') }}</button>
             </div>
         </form>
     </div>

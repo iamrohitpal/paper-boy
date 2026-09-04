@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Quick Assign Paper') }}
+            {{ __('{{ __('messages.quick_assign_paper') }}') }}
         </h2>
     </x-slot>
 
@@ -44,16 +44,15 @@
                     <!-- Customer Selection -->
                     <div
                         class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">1. Select Customer</h3>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">{{ __('messages.step_1_select_customer') }}</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="customer_id"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Customer
-                                    *</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.customer') }} *</label>
                                 <select name="customer_id" id="customer_id"
                                     class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md"
                                     required>
-                                    <option value="">Select Customer</option>
+                                    <option value="">{{ __('messages.select_a_customer') }}</option>
                                     @foreach($customers as $customer)
                                         <option value="{{ $customer->id }}">{{ $customer->name }} ({{ $customer->mobile }})
                                         </option>
@@ -63,16 +62,15 @@
                             </div>
                             <div>
                                 <label for="payment_frequency"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Customer Payment
-                                    Frequency *</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.customer_payment_frequency') }} *</label>
                                 <select name="payment_frequency" id="payment_frequency"
                                     class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md"
                                     required>
-                                    <option value="Daily">Daily</option>
-                                    <option value="Weekly">Weekly</option>
-                                    <option value="Monthly">Monthly</option>
+                                    <option value="Daily">{{ __('messages.daily') }}</option>
+                                    <option value="Weekly">{{ __('messages.weekly') }}</option>
+                                    <option value="Monthly">{{ __('messages.monthly') }}</option>
                                 </select>
-                                <p class="mt-1 text-xs text-gray-500">Updates how often this customer pays you.</p>
+                                <p class="mt-1 text-xs text-gray-500">{{ __('messages.updates_how_often_customer_pays') }}</p>
                                 @error('payment_frequency') <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -82,18 +80,17 @@
                     <!-- Newspaper Selection -->
                     <div
                         class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">2. Assign Newspaper</h3>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">{{ __('messages.step_2_assign_newspaper') }}</h3>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                             <div>
                                 <label for="newspaper_id"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Newspaper
-                                    *</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.newspaper') }} *</label>
                                 <select name="newspaper_id" id="newspaper_id" x-model="selectedNewspaper"
                                     @change="updatePrice()"
                                     class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md"
                                     required>
-                                    <option value="">Select Newspaper</option>
+                                    <option value="">{{ __('messages.select_a_newspaper') }}</option>
                                     @foreach($newspapers as $newspaper)
                                         <option value="{{ $newspaper->id }}">{{ $newspaper->name }}</option>
                                     @endforeach
@@ -105,8 +102,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                             <div>
                                 <label for="start_date"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Start Date
-                                    *</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.start_date') }} *</label>
                                 <input type="date" name="start_date" id="start_date" value="{{ date('Y-m-d') }}"
                                     class="mt-1 focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
                                     required>
@@ -114,8 +110,7 @@
                             </div>
                             <div>
                                 <label for="quantity"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quantity
-                                    *</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.quantity') }} *</label>
                                 <input type="number" name="quantity" id="quantity" value="1" min="1"
                                     class="mt-1 focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
                                     required>
@@ -126,22 +121,20 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="price"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Price (₹)
-                                    *</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.price_rs') }} *</label>
                                 <input type="number" name="price" id="price" step="0.01" min="0" x-model="currentPrice"
                                     class="mt-1 focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
                                     required>
-                                <p class="text-xs text-gray-500 mt-1">Base price per day</p>
+                                <p class="text-xs text-gray-500 mt-1">{{ __('messages.base_price_per_day') }}</p>
                                 @error('price') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                             <div>
                                 <label for="price_sunday"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Sunday Price
-                                    (₹)</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.sunday_price_rs') }}</label>
                                 <input type="number" name="price_sunday" id="price_sunday" step="0.01" min="0"
                                     x-model="currentSundayPrice"
                                     class="mt-1 focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
-                                <p class="text-xs text-gray-500 mt-1">Leave empty if same</p>
+                                <p class="text-xs text-gray-500 mt-1">{{ __('messages.leave_empty_if_same') }}</p>
                                 @error('price_sunday') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
                         </div>
@@ -150,7 +143,7 @@
                     <div class="flex justify-end pt-4">
                         <button type="submit"
                             class="px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
-                            Assign Paper
+                            {{ __('messages.assign_paper') }}
                         </button>
                     </div>
                 </div>

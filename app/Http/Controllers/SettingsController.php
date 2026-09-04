@@ -2,20 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Plan;
 use App\Models\Setting;
+use App\Models\Tenant;
+use App\Services\SubscriptionLimitService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class SettingsController extends Controller
 {
-    public function index()
+    public function index(SubscriptionLimitService $limitService)
     {
         $setting = Setting::firstOrCreate([], [
             'app_name' => 'Newspaper Distributor',
             'primary_color' => '#4f46e5',
         ]);
 
-        return view('settings.index', compact('setting'));
+        $tenant = auth()->user()->tenant;
+        if (auth()->user()->hasRole('Super Admin') && session()->has('active_tenant_id')) {
+            $tenant = Tenant::find(session('active_tenant_id'));
+        }
+
+        $activeSubscription = $tenant ? $limitService->getActiveSubscription($tenant) : null;
+        $customerLimit = $limitService->getCustomerLimit($tenant);
+        $usedCustomers = $limitService->getUsedCustomers($tenant);
+
+        $availablePlans = Plan::where('status', 'active')->orderBy('price')->get();
+
+        return view('settings.index', compact('setting', 'activeSubscription', 'customerLimit', 'usedCustomers', 'availablePlans'));
     }
 
     public function update(Request $request)

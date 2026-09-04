@@ -37,7 +37,42 @@
     </div>
     
     <div class="flex items-center space-x-4">
-        <!-- Theme Toggle -->
+        <!-- Tenant Switcher (Super Admin Only) -->
+        @if(auth()->user()->hasRole('Super Admin'))
+            <div x-data="{ tenantOpen: false }" class="relative hidden sm:block">
+                <button @click="tenantOpen = !tenantOpen" class="flex items-center space-x-1 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white focus:outline-none px-3 py-2 rounded-md bg-gray-100 dark:bg-gray-800 transition-colors">
+                    @if(session()->has('active_tenant_id'))
+                        <span class="text-primary truncate max-w-[150px]">Impersonating: {{ session('active_tenant_name') }}</span>
+                    @else
+                        <span>Global Admin Mode</span>
+                    @endif
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+
+                <div x-show="tenantOpen" @click="tenantOpen = false" class="fixed inset-0 z-10" style="display: none;"></div>
+
+                <div x-show="tenantOpen" x-transition class="absolute right-0 z-20 w-56 mt-2 overflow-hidden bg-white dark:bg-gray-800 rounded-md shadow-xl border border-gray-100 dark:border-gray-700 max-h-64 overflow-y-auto" style="display: none;">
+                    @if(session()->has('active_tenant_id'))
+                        <form method="POST" action="{{ route('tenant.clear') }}">
+                            @csrf
+                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 font-bold hover:bg-gray-100 dark:hover:bg-gray-700">Stop Impersonating</button>
+                        </form>
+                    @endif
+                    
+                    <div class="px-4 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider bg-gray-50 dark:bg-gray-900/50">Available Agencies</div>
+                    
+                    @foreach(\App\Models\Tenant::orderBy('name')->get() as $t)
+                        <form method="POST" action="{{ route('tenant.switch', $t->id) }}">
+                            @csrf
+                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-primary hover:text-white transition-colors {{ session('active_tenant_id') == $t->id ? 'bg-primary/10 text-primary' : '' }}">
+                                {{ $t->name }}
+                            </button>
+                        </form>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
         <!-- Theme Toggle -->
         <button @click="darkMode = !darkMode" class="text-gray-500 dark:text-gray-400 focus:outline-none p-2 rounded-full bg-gray-100 dark:bg-[#1f2937] hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
             <!-- Moon icon for light mode -->
@@ -91,11 +126,11 @@
             <div x-show="dropdownOpen" @click="dropdownOpen = false" class="fixed inset-0 z-10 w-full h-full" style="display: none;"></div>
 
             <div x-show="dropdownOpen" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" class="absolute right-0 z-10 w-48 mt-2 overflow-hidden bg-white dark:bg-gray-800 rounded-md shadow-xl border border-gray-100 dark:border-gray-700" style="display: none;">
-                <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-primary hover:text-white transition-colors">Profile</a>
-                <a href="{{ route('settings.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-primary hover:text-white transition-colors">Settings</a>
+                <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-primary hover:text-white transition-colors">{{ __('messages.profile') }}</a>
+                <a href="{{ route('settings.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-primary hover:text-white transition-colors">{{ __('messages.settings') }}</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-red-600 hover:text-white transition-colors">Logout</a>
+                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-red-600 hover:text-white transition-colors">{{ __('messages.logout') }}</a>
                 </form>
             </div>
         </div>

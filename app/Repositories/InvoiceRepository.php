@@ -74,15 +74,15 @@ class InvoiceRepository extends BaseRepository implements InvoiceRepositoryInter
         foreach ($subscriptions as $subscription) {
             $subscriptionLineTotal = 0;
             $deliveredDaysCount = 0;
-            
-            $subPeriodStart = $subscription->last_billed_date 
-                ? Carbon::parse($subscription->last_billed_date)->addDay() 
+
+            $subPeriodStart = $subscription->last_billed_date
+                ? Carbon::parse($subscription->last_billed_date)->addDay()
                 : Carbon::parse($subscription->start_date);
-                
+
             if ($subPeriodStart->gt($upToDate)) {
                 continue;
             }
-            
+
             if ($subPeriodStart->lt($actualPeriodStart)) {
                 $actualPeriodStart = $subPeriodStart->copy();
             }
@@ -171,13 +171,13 @@ class InvoiceRepository extends BaseRepository implements InvoiceRepositoryInter
                 'total' => $lineTotal,
                 'extra_newspaper_id' => $extra->id,
             ];
-            
+
             $extraDate = Carbon::parse($extra->date);
             if ($extraDate->lt($actualPeriodStart)) {
                 $actualPeriodStart = $extraDate->copy();
             }
         }
-        
+
         $finalPeriodStart = $actualPeriodStart->lt($upToDate) ? $actualPeriodStart : $globalPeriodStart;
         if ($finalPeriodStart->gt($upToDate)) {
             $finalPeriodStart = $upToDate->copy()->startOfMonth();
@@ -204,7 +204,12 @@ class InvoiceRepository extends BaseRepository implements InvoiceRepositoryInter
         $invoice = null;
 
         DB::transaction(function () use ($customer, $upToDate, $unbilled, &$invoice) {
+            $tenantId = auth()->check() ? auth()->user()->tenant_id : ($customer->tenant_id ?? null);
+            $userId = auth()->check() ? auth()->id() : ($customer->user_id ?? null);
+
             $invoice = Invoice::create([
+                'tenant_id' => $tenantId,
+                'user_id' => $userId,
                 'customer_id' => $customer->id,
                 'invoice_number' => 'INV-'.strtoupper(uniqid()),
                 'billing_month' => $upToDate->format('Y-m-d'), // Keep for legacy compatibility
@@ -221,6 +226,8 @@ class InvoiceRepository extends BaseRepository implements InvoiceRepositoryInter
                 unset($item['extra_newspaper_id']);
 
                 $item['invoice_id'] = $invoice->id;
+                $item['tenant_id'] = $tenantId;
+                $item['user_id'] = $userId;
                 InvoiceItem::create($item);
             }
 
@@ -233,7 +240,7 @@ class InvoiceRepository extends BaseRepository implements InvoiceRepositoryInter
             foreach ($unbilled['extraNewspapers'] as $extra) {
                 $extra->update(['is_billed' => true]);
             }
-            
+
             // Mark subscriptions as billed up to this date
             if (isset($unbilled['subscriptionsToUpdate'])) {
                 foreach ($unbilled['subscriptionsToUpdate'] as $sub) {

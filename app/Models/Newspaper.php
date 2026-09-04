@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\BelongsToUser;
+use App\Traits\BelongsToTenant;
 use Database\Factories\NewspaperFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Newspaper extends Model
 {
     /** @use HasFactory<NewspaperFactory> */
-    use BelongsToUser, HasFactory, SoftDeletes;
+    use BelongsToTenant, HasFactory, SoftDeletes;
 
     protected $guarded = ['id'];
 

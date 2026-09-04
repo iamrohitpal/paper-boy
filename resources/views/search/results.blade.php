@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Search Results') }} 
+            {{ __('messages.search_results') }} 
             @if($query)
-                <span class="text-gray-500 dark:text-gray-400 font-normal">for "{{ $query }}"</span>
+                <span class="text-gray-500 dark:text-gray-400 font-normal">{{ __('messages.for_query', ['query' => $query]) }}</span>
             @endif
         </h2>
     </x-slot>
@@ -12,14 +12,14 @@
         @if(empty($query))
             <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-8 text-center border border-gray-100 dark:border-gray-700">
                 <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Enter a search term</h3>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Search for customers, invoices, or newspapers.</p>
+                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('messages.enter_search_term') }}</h3>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ __('messages.search_for_customers') }}</p>
             </div>
         @elseif($results['customers']->isEmpty() && $results['invoices']->isEmpty() && $results['newspapers']->isEmpty())
             <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-8 text-center border border-gray-100 dark:border-gray-700">
                 <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">No results found</h3>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">We couldn't find anything matching "{{ $query }}".</p>
+                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('messages.no_results_found') }}</h3>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ __('messages.we_couldnt_find_anything', ['query' => $query]) }}</p>
             </div>
         @else
             <div class="space-y-8">
@@ -28,7 +28,7 @@
                     <section class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden border border-gray-100 dark:border-gray-700">
                         <div class="px-4 py-5 border-b border-gray-200 dark:border-gray-700 sm:px-6">
                             <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
-                                Customers ({{ $results['customers']->count() }})
+                                {{ __('messages.customers_count', ['count' => $results['customers']->count()]) }}
                             </h3>
                         </div>
                         <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -56,7 +56,7 @@
                     <section class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden border border-gray-100 dark:border-gray-700">
                         <div class="px-4 py-5 border-b border-gray-200 dark:border-gray-700 sm:px-6">
                             <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
-                                Invoices ({{ $results['invoices']->count() }})
+                                {{ __('messages.invoices_count', ['count' => $results['invoices']->count()]) }}
                             </h3>
                         </div>
                         <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -66,7 +66,7 @@
                                         <div class="px-4 py-4 sm:px-6 flex justify-between items-center">
                                             <div>
                                                 <p class="text-sm font-medium text-primary truncate">{{ $invoice->invoice_number }}</p>
-                                                <p class="text-sm text-gray-500 dark:text-gray-400">Total: ₹{{ number_format($invoice->total_amount, 2) }} &bull; Status: {{ $invoice->status }}</p>
+                                                <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.total_amount', ['amount' => number_format($invoice->total_amount, 2)]) }} &bull; {{ __('messages.status_val', ['status' => $invoice->status]) }}</p>
                                             </div>
                                             <div class="flex-shrink-0">
                                                 <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
@@ -84,7 +84,7 @@
                     <section class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden border border-gray-100 dark:border-gray-700">
                         <div class="px-4 py-5 border-b border-gray-200 dark:border-gray-700 sm:px-6">
                             <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
-                                Newspapers ({{ $results['newspapers']->count() }})
+                                {{ __('messages.newspapers_count', ['count' => $results['newspapers']->count()]) }}
                             </h3>
                         </div>
                         <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -94,7 +94,7 @@
                                         <div class="px-4 py-4 sm:px-6 flex justify-between items-center">
                                             <div>
                                                 <p class="text-sm font-medium text-primary truncate">{{ $newspaper->name }}</p>
-                                                <p class="text-sm text-gray-500 dark:text-gray-400">Publisher: {{ $newspaper->publisher }}</p>
+                                                <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('messages.publisher_val', ['publisher' => $newspaper->publisher]) }}</p>
                                             </div>
                                             <div class="flex-shrink-0">
                                                 <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>

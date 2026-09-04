@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\BelongsToUser;
+use App\Traits\BelongsToTenant;
 use Database\Factories\CustomerFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +12,7 @@ use Illuminate\Notifications\Notifiable;
 class Customer extends Model
 {
     /** @use HasFactory<CustomerFactory> */
-    use BelongsToUser, HasFactory, Notifiable, SoftDeletes;
+    use BelongsToTenant, HasFactory, Notifiable, SoftDeletes;
 
     protected $guarded = ['id'];
 

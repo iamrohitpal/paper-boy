@@ -9,7 +9,7 @@
                 </svg>
             </a>
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Edit Expense') }}
+                {{ __('{{ __('messages.edit_expense') }}') }}
             </h2>
         </div>
     </x-slot>
@@ -22,8 +22,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Title -->
                 <div>
-                    <label for="title" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Title /
-                        Subject *</label>
+                    <label for="title" class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('messages.title_subject') }} *</label>
                     <input type="text" name="title" id="title" value="{{ old('title', $expense->title) }}"
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 rounded-md shadow-sm"
                         required>
@@ -32,12 +31,11 @@
 
                 <!-- Category -->
                 <div>
-                    <label for="category" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Category
-                        *</label>
+                    <label for="category" class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('messages.category') }} *</label>
                     <select name="category" id="category"
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 rounded-md shadow-sm"
                         required>
-                        <option value="">Select Category</option>
+                        <option value="">{{ __('messages.select_category') }}</option>
                         @foreach($categories as $category)
                             <option value="{{ $category }}" {{ old('category', $expense->category) == $category ? 'selected' : '' }}>{{ $category }}</option>
                         @endforeach
@@ -47,8 +45,7 @@
 
                 <!-- Amount -->
                 <div>
-                    <label for="amount" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Amount (₹)
-                        *</label>
+                    <label for="amount" class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('messages.amount') }} (₹) *</label>
                     <input type="number" step="0.01" name="amount" id="amount"
                         value="{{ old('amount', $expense->amount) }}" min="0"
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 rounded-md shadow-sm"
@@ -58,8 +55,7 @@
 
                 <!-- Date -->
                 <div>
-                    <label for="expense_date" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Date
-                        *</label>
+                    <label for="expense_date" class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('messages.date') }} *</label>
                     <input type="date" name="expense_date" id="expense_date"
                         value="{{ old('expense_date', $expense->expense_date->format('Y-m-d')) }}"
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 rounded-md shadow-sm"
@@ -70,8 +66,7 @@
 
             <!-- Description -->
             <div class="mt-6">
-                <label for="description" class="block font-medium text-sm text-gray-700 dark:text-gray-300">Description
-                    (Optional)</label>
+                <label for="description" class="block font-medium text-sm text-gray-700 dark:text-gray-300">{{ __('messages.description') }} ({{ __('messages.notes_optional') }})</label>
                 <textarea name="description" id="description" rows="3"
                     class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 rounded-md shadow-sm">{{ old('description', $expense->description) }}</textarea>
                 @error('description') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
@@ -79,10 +74,9 @@
 
             <div class="mt-6 flex justify-end">
                 <a href="{{ route('expenses.index') }}"
-                    class="mr-3 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">Cancel</a>
+                    class="mr-3 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">{{ __('messages.cancel') }}</a>
                 <button type="submit"
-                    class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">Update
-                    Expense</button>
+                    class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">{{ __('messages.update_expense') }}</button>
             </div>
         </form>
     </div>

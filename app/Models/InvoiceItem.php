@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\BelongsToUser;
+use App\Traits\BelongsToTenant;
 use Database\Factories\InvoiceItemFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class InvoiceItem extends Model
 {
     /** @use HasFactory<InvoiceItemFactory> */
-    use BelongsToUser, HasFactory;
+    use BelongsToTenant, HasFactory;
 
     protected $guarded = ['id'];
 
