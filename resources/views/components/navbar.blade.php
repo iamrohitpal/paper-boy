@@ -95,12 +95,14 @@
             <div x-show="notifyOpen" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" class="absolute right-0 z-10 w-80 mt-2 overflow-hidden bg-white dark:bg-gray-800 rounded-md shadow-xl border border-gray-100 dark:border-gray-700" style="display: none;">
                 <div class="px-4 py-2 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 flex justify-between items-center">
                     <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">Notifications</span>
-                    @if(auth()->user()->unreadNotifications->count() > 0)
-                    <form action="{{ route('notifications.readAll') }}" method="POST" class="m-0">
-                        @csrf
-                        <button type="submit" class="text-xs text-blue-600 dark:text-blue-400 hover:underline bg-transparent border-none p-0 cursor-pointer">Mark all as read</button>
-                    </form>
-                    @endif
+                    <div class="flex items-center gap-2">
+                        @if(auth()->user()->unreadNotifications->count() > 0)
+                        <form action="{{ route('notifications.readAll') }}" method="POST" class="m-0">
+                            @csrf
+                            <button type="submit" class="text-xs text-blue-600 dark:text-blue-400 hover:underline bg-transparent border-none p-0 cursor-pointer">Mark all as read</button>
+                        </form>
+                        @endif
+                    </div>
                 </div>
                 <div class="max-h-64 overflow-y-auto">
                     @forelse(auth()->user()->unreadNotifications as $notification)
@@ -111,9 +113,12 @@
                         </a>
                     @empty
                         <div class="px-4 py-3 text-sm text-gray-500 dark:text-gray-400 text-center">
-                            No new notifications
+                            No unread notifications
                         </div>
                     @endforelse
+                </div>
+                <div class="p-2 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-center">
+                    <a href="{{ route('notifications.index') }}" class="text-xs font-bold text-primary hover:underline">View All Notifications &rarr;</a>
                 </div>
             </div>
         </div>

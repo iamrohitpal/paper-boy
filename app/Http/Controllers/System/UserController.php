@@ -12,10 +12,11 @@ class UserController extends Controller
 {
     public function index()
     {
-        // Super Admin can see all users
-        $users = User::with('roles')->get();
+        // Super Admin can see all users, tenants and their active plan / subscription days
+        $users = User::with(['roles', 'tenant.subscriptions.plan'])->get();
+        $plans = \App\Models\Plan::where('status', 'active')->get();
 
-        return view('system.users.index', compact('users'));
+        return view('system.users.index', compact('users', 'plans'));
     }
 
     public function create()
@@ -86,5 +87,59 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'Tenant/User deleted successfully.');
+    }
+
+    public function updateSubscription(Request $request, User $user)
+    {
+        $request->validate([
+            'plan_id' => 'required|exists:plans,id',
+            'days' => 'required|integer|min:1',
+        ]);
+
+        $tenant = $user->tenant;
+        if (!$tenant) {
+            return back()->with('error', 'User does not belong to a tenant.');
+        }
+
+        $plan = \App\Models\Plan::findOrFail($request->plan_id);
+
+        // Cancel previous active subscriptions
+        \App\Models\TenantSubscription::where('tenant_id', $tenant->id)->update(['status' => 'cancelled']);
+
+        \App\Models\TenantSubscription::create([
+            'tenant_id' => $tenant->id,
+            'plan_id' => $plan->id,
+            'status' => 'active',
+            'starts_at' => now(),
+            'ends_at' => now()->addDays((int) $request->days),
+            'customer_limit_snapshot' => $plan->customer_limit,
+        ]);
+
+        return back()->with('success', "Subscription for {$user->name} updated to {$plan->name} for {$request->days} days.");
+    }
+
+    public function sendNotification(Request $request)
+    {
+        $request->validate([
+            'role_filter' => 'nullable|string',
+            'title' => 'required|string|max:255',
+            'message' => 'required|string',
+        ]);
+
+        $query = User::query();
+        if ($request->filled('role_filter')) {
+            $query->role($request->role_filter);
+        }
+
+        $users = $query->get();
+
+        foreach ($users as $recipient) {
+            $recipient->notify(new \App\Notifications\GenericSystemNotification(
+                $request->title,
+                $request->message
+            ));
+        }
+
+        return back()->with('success', 'Notification sent to ' . $users->count() . ' user(s).');
     }
 }

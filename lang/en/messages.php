@@ -412,4 +412,6 @@ return [
     'transaction_id' => 'Transaction ID',
     'notes' => 'Notes',
     'select_customer' => 'Select Customer',
+    'users' => 'Users',
+    'add_user' => 'Add User',
 ];

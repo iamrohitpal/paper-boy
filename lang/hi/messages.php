@@ -435,4 +435,6 @@ return [
     'transaction_id' => 'लेनदेन आईडी (Transaction ID)',
     'notes' => 'नोट्स (Notes)',
     'select_customer' => 'ग्राहक चुनें (Select Customer)',
+    'users' => 'उपयोगकर्ता (Users)',
+    'add_user' => 'उपयोगकर्ता जोड़ें (Add User)',
 ];

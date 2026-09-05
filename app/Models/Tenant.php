@@ -22,4 +22,9 @@ class Tenant extends Model
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(TenantSubscription::class);
+    }
 }

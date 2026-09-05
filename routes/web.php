@@ -66,6 +66,8 @@ Route::middleware('auth')->group(function () {
 
     // Plan Management (Super Admin)
     Route::resource('/system/plans', PlanController::class)->middleware('role:Super Admin');
+    Route::post('/system/users/{user}/subscription', [UserController::class, 'updateSubscription'])->name('users.subscription.update')->middleware('role:Super Admin');
+    Route::post('/system/notifications/send', [UserController::class, 'sendNotification'])->name('users.notifications.send')->middleware('role:Super Admin');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -148,6 +150,7 @@ Route::middleware('auth')->group(function () {
     Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
 
     // Notifications (accessible to all logged-in users)
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
     Route::get('notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 

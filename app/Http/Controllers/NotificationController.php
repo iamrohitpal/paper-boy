@@ -35,6 +35,13 @@ class NotificationController extends Controller
         return redirect()->to($actionUrl);
     }
 
+    public function index()
+    {
+        $notifications = auth()->user()->notifications()->paginate(20);
+
+        return view('notifications.index', compact('notifications'));
+    }
+
     public function markAllAsRead()
     {
         auth()->user()->unreadNotifications->markAsRead();

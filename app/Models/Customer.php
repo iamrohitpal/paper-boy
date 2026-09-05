@@ -16,6 +16,23 @@ class Customer extends Model
 
     protected $guarded = ['id'];
 
+    protected static function booted()
+    {
+        static::creating(function ($customer) {
+            if (empty($customer->customer_id)) {
+                $lastCustomer = static::withoutGlobalScopes()->orderBy('id', 'desc')->first();
+                $nextNum = $lastCustomer ? ($lastCustomer->id + 1) : 1;
+                $customer->customer_id = 'CUST' . str_pad($nextNum, 4, '0', STR_PAD_LEFT);
+            }
+            if (empty($customer->start_date)) {
+                $customer->start_date = now()->format('Y-m-d');
+            }
+            if (empty($customer->payment_frequency)) {
+                $customer->payment_frequency = 'monthly';
+            }
+        });
+    }
+
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
