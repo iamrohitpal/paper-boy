@@ -135,7 +135,8 @@ class InvoiceRepository extends BaseRepository implements InvoiceRepositoryInter
                     continue;
                 }
 
-                $price = $currentDate->isSunday() && $subscription->price_sunday ? $subscription->price_sunday : $subscription->price;
+                $dayPriceField = 'price_' . strtolower($currentDate->format('l'));
+                $price = $subscription->{$dayPriceField} ?? $subscription->price;
 
                 $subscriptionLineTotal += ($price * $subscription->quantity);
                 $deliveredDaysCount++;

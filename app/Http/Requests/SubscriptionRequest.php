@@ -32,6 +32,12 @@ class SubscriptionRequest extends FormRequest
             'custom_days' => 'nullable|array',
             'custom_days.*' => 'string|in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
             'price' => 'required|numeric|min:0',
+            'price_monday' => 'nullable|numeric|min:0',
+            'price_tuesday' => 'nullable|numeric|min:0',
+            'price_wednesday' => 'nullable|numeric|min:0',
+            'price_thursday' => 'nullable|numeric|min:0',
+            'price_friday' => 'nullable|numeric|min:0',
+            'price_saturday' => 'nullable|numeric|min:0',
             'price_sunday' => 'nullable|numeric|min:0',
             'status' => 'nullable|in:Active,Paused,Cancelled',
         ];

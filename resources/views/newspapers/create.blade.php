@@ -92,20 +92,39 @@
                         @error('selling_price') <p class="mt-1.5 text-sm font-medium text-red-500">{{ $message }}</p> @enderror
                     </div>
 
-                    <!-- Selling Price (Sunday) -->
-                    <div>
-                        <label for="selling_price_sunday"
-                            class="block font-semibold text-sm text-gray-700 dark:text-gray-300 mb-1.5">{{ __('messages.selling_price_sunday') }}</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <span class="text-gray-500 dark:text-gray-400 font-medium">₹</span>
-                            </div>
-                            <input type="number" step="0.01" name="selling_price_sunday" id="selling_price_sunday"
-                                value="{{ old('selling_price_sunday') }}"
-                                class="pl-7 block w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl shadow-sm transition-all"
-                                placeholder="{{ __('messages.leave_empty_same_as_daily') }}">
+                    <!-- Day-wise Pricing Toggle -->
+                    <div class="md:col-span-2">
+                        <div class="flex items-center justify-between mb-3">
+                            <label class="block font-semibold text-sm text-gray-700 dark:text-gray-300">{{ __('messages.daywise_pricing') }}</label>
+                            <button type="button" onclick="toggleDayPricing()"
+                                class="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold rounded-lg border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                id="dayPricingToggle">
+                                <svg class="h-4 w-4 transition-transform" id="dayPricingIcon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                                <span id="dayPricingLabel">{{ __('messages.show_day_prices') }}</span>
+                            </button>
                         </div>
-                        @error('selling_price_sunday') <p class="mt-1.5 text-sm font-medium text-red-500">{{ $message }}</p> @enderror
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">{{ __('messages.daywise_pricing_hint') }}</p>
+
+                        <div id="dayPricingSection" class="hidden grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-gray-100 dark:border-gray-700">
+                            @foreach(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as $day)
+                            <div>
+                                <label for="selling_price_{{ $day }}"
+                                    class="block font-medium text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('messages.' . $day) }}</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
+                                        <span class="text-gray-400 dark:text-gray-500 text-sm font-medium">₹</span>
+                                    </div>
+                                    <input type="number" step="0.01" name="selling_price_{{ $day }}" id="selling_price_{{ $day }}"
+                                        value="{{ old('selling_price_' . $day) }}"
+                                        class="pl-6 block w-full text-sm bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-lg shadow-sm transition-all"
+                                        placeholder="{{ __('messages.default_price') }}">
+                                </div>
+                                @error('selling_price_' . $day) <p class="mt-1 text-xs font-medium text-red-500">{{ $message }}</p> @enderror
+                            </div>
+                            @endforeach
+                        </div>
                     </div>
 
                     <!-- Commission -->
@@ -152,4 +171,36 @@
             </form>
         </div>
     </div>
+
+    <script>
+        function toggleDayPricing() {
+            const section = document.getElementById('dayPricingSection');
+            const icon = document.getElementById('dayPricingIcon');
+            const label = document.getElementById('dayPricingLabel');
+
+            if (section.classList.contains('hidden')) {
+                section.classList.remove('hidden');
+                section.classList.add('grid');
+                icon.style.transform = 'rotate(180deg)';
+                label.textContent = '{{ __("messages.hide_day_prices") }}';
+            } else {
+                section.classList.add('hidden');
+                section.classList.remove('grid');
+                icon.style.transform = 'rotate(0deg)';
+                label.textContent = '{{ __("messages.show_day_prices") }}';
+            }
+        }
+
+        // Auto-expand if any day price has a value (e.g. after validation error)
+        document.addEventListener('DOMContentLoaded', function() {
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            const hasValue = days.some(day => {
+                const input = document.getElementById('selling_price_' + day);
+                return input && input.value !== '';
+            });
+            if (hasValue) {
+                toggleDayPricing();
+            }
+        });
+    </script>
 </x-app-layout>

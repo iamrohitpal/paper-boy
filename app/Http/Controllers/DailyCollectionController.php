@@ -25,10 +25,10 @@ class DailyCollectionController extends Controller
         // Calculate expected daily collection per customer
         foreach ($customers as $customer) {
             $dailyTotal = 0;
-            $isSunday = Carbon::today()->isSunday();
+            $dayPriceField = 'price_' . strtolower(Carbon::today()->format('l'));
 
             foreach ($customer->subscriptions as $sub) {
-                $price = ($isSunday && $sub->price_sunday) ? $sub->price_sunday : $sub->price;
+                $price = $sub->{$dayPriceField} ?? $sub->price;
                 $dailyTotal += ($price * $sub->quantity);
             }
             $customer->expected_collection = $dailyTotal;
@@ -50,10 +50,10 @@ class DailyCollectionController extends Controller
         ]);
 
         $ids = $request->customer_ids;
-        $isSunday = Carbon::today()->isSunday();
+        $dayPriceField = 'price_' . strtolower(Carbon::today()->format('l'));
         $count = 0;
 
-        DB::transaction(function () use ($ids, $isSunday, &$count) {
+        DB::transaction(function () use ($ids, $dayPriceField, &$count) {
             foreach ($ids as $id) {
                 $customer = Customer::with(['subscriptions' => function ($q) {
                     $q->where('status', 'Active');
@@ -65,7 +65,7 @@ class DailyCollectionController extends Controller
 
                 $dailyTotal = 0;
                 foreach ($customer->subscriptions as $sub) {
-                    $price = ($isSunday && $sub->price_sunday) ? $sub->price_sunday : $sub->price;
+                    $price = $sub->{$dayPriceField} ?? $sub->price;
                     $dailyTotal += ($price * $sub->quantity);
                 }
 

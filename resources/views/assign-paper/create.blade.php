@@ -11,21 +11,33 @@
                         @foreach($newspapers as $np)
                             '{{ $np->id }}': {
                                 daily: {{ $np->selling_price ?: 0 }},
+                                monday: {{ $np->selling_price_monday ?: 'null' }},
+                                tuesday: {{ $np->selling_price_tuesday ?: 'null' }},
+                                wednesday: {{ $np->selling_price_wednesday ?: 'null' }},
+                                thursday: {{ $np->selling_price_thursday ?: 'null' }},
+                                friday: {{ $np->selling_price_friday ?: 'null' }},
+                                saturday: {{ $np->selling_price_saturday ?: 'null' }},
                                 sunday: {{ $np->selling_price_sunday ?: 'null' }}
                             }{{ !$loop->last ? ',' : '' }}
                         @endforeach
                     },
                     selectedNewspaper: '',
                     currentPrice: 0,
-                    currentSundayPrice: '',
+                    currentDayPrices: { monday: '', tuesday: '', wednesday: '', thursday: '', friday: '', saturday: '', sunday: '' },
+                    showDayPrices: false,
                     updatePrice() {
                         if (this.selectedNewspaper && this.newspaperPrices[this.selectedNewspaper]) {
                             const prices = this.newspaperPrices[this.selectedNewspaper];
                             this.currentPrice = prices.daily;
-                            this.currentSundayPrice = prices.sunday !== null ? prices.sunday : '';
+                            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+                            days.forEach(day => {
+                                this.currentDayPrices[day] = prices[day] !== null ? prices[day] : '';
+                            });
+                            this.showDayPrices = days.some(day => prices[day] !== null);
                         } else {
                             this.currentPrice = 0;
-                            this.currentSundayPrice = '';
+                            this.currentDayPrices = { monday: '', tuesday: '', wednesday: '', thursday: '', friday: '', saturday: '', sunday: '' };
+                            this.showDayPrices = false;
                         }
                     }
                 }">
@@ -128,14 +140,31 @@
                                 <p class="text-xs text-gray-500 mt-1">{{ __('messages.base_price_per_day') }}</p>
                                 @error('price') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
-                            <div>
-                                <label for="price_sunday"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('messages.sunday_price_rs') }}</label>
-                                <input type="number" name="price_sunday" id="price_sunday" step="0.01" min="0"
-                                    x-model="currentSundayPrice"
-                                    class="mt-1 focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
-                                <p class="text-xs text-gray-500 mt-1">{{ __('messages.leave_empty_if_same') }}</p>
-                                @error('price_sunday') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                            <div class="flex items-end">
+                                <button type="button" @click="showDayPrices = !showDayPrices"
+                                    class="inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <svg class="h-4 w-4 transition-transform" :class="showDayPrices ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                    <span x-text="showDayPrices ? '{{ __("messages.hide_day_prices") }}' : '{{ __("messages.show_day_prices") }}'"></span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div x-show="showDayPrices" x-collapse class="mt-4">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">{{ __('messages.daywise_pricing_hint') }}</p>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-gray-200 dark:border-gray-600">
+                                @foreach(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as $day)
+                                <div>
+                                    <label for="price_{{ $day }}"
+                                        class="block font-medium text-xs text-gray-600 dark:text-gray-400 mb-1">{{ __('messages.' . $day) }}</label>
+                                    <input type="number" name="price_{{ $day }}" id="price_{{ $day }}" step="0.01" min="0"
+                                        x-model="currentDayPrices.{{ $day }}"
+                                        class="block w-full text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-primary focus:border-primary rounded-md"
+                                        placeholder="{{ __('messages.default_price') }}">
+                                    @error('price_' . $day) <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>

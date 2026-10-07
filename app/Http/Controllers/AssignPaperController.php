@@ -26,6 +26,12 @@ class AssignPaperController extends Controller
             'payment_frequency' => 'required|in:Daily,Weekly,Monthly',
             'quantity' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
+            'price_monday' => 'nullable|numeric|min:0',
+            'price_tuesday' => 'nullable|numeric|min:0',
+            'price_wednesday' => 'nullable|numeric|min:0',
+            'price_thursday' => 'nullable|numeric|min:0',
+            'price_friday' => 'nullable|numeric|min:0',
+            'price_saturday' => 'nullable|numeric|min:0',
             'price_sunday' => 'nullable|numeric|min:0',
         ]);
 
@@ -41,6 +47,12 @@ class AssignPaperController extends Controller
             'quantity' => $request->quantity,
             'delivery_days' => 'Daily', // Defaulting to daily for quick assign, can be customized later
             'price' => $request->price,
+            'price_monday' => $request->price_monday,
+            'price_tuesday' => $request->price_tuesday,
+            'price_wednesday' => $request->price_wednesday,
+            'price_thursday' => $request->price_thursday,
+            'price_friday' => $request->price_friday,
+            'price_saturday' => $request->price_saturday,
             'price_sunday' => $request->price_sunday,
             'status' => 'Active',
         ]);
